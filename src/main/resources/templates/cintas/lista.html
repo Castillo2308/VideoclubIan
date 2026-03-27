@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Cintas</title>
+</head>
+<body>
+    <h1>Lista de Cintas</h1>
+    <a th:href="@{/}">Inicio</a>
+    <a th:href="@{/cintas/nuevo}">Nueva Cinta</a>
+
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Código</th>
+                <th>Estantería</th>
+                <th>Estante</th>
+                <th>Fila</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="c : ${cintas}">
+                <td th:text="${c.codigoCinta}"></td>
+                <td th:text="${c.estanteria}"></td>
+                <td th:text="${c.estante}"></td>
+                <td th:text="${c.fila}"></td>
+                <td>
+                    <a th:href="@{'/cintas/editar/' + ${c.codigoCinta}}">Editar</a>
+                    <a th:href="@{'/cintas/eliminar/' + ${c.codigoCinta}}">Eliminar</a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</body>
+</html>

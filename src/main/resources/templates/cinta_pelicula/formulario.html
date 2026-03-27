@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Relacionar Cinta y Película</title>
+</head>
+<body>
+    <h1>Nueva relación Cinta - Película</h1>
+    <a th:href="@{/cinta-pelicula}">Volver</a>
+    <form th:action="@{/cinta-pelicula/guardar}" method="post">
+        <div>
+            <label>Cinta:</label>
+            <select name="codigoCinta">
+                <option th:each="c : ${cintas}"
+                        th:value="${c.codigoCinta}"
+                        th:text="${c.codigoCinta + ' - ' + c.estanteria}"></option>
+            </select>
+        </div>
+        <div>
+            <label>Película:</label>
+            <select name="codigoPelicula">
+                <option th:each="p : ${peliculas}"
+                        th:value="${p.codigoPelicula}"
+                        th:text="${p.codigoPelicula + ' - ' + p.titulo}"></option>
+            </select>
+        </div>
+        <button type="submit">Guardar</button>
+    </form>
+</body>
+</html>

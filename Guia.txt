@@ -1,0 +1,1000 @@
+Guía práctica para el desarrollo de un sistema web con Spring Boot, Thymeleaf y Oracle
+
+Autonomous Database
+
+En el desarrollo de aplicaciones modernas, especialmente en entornos
+empresariales y educativos, es fundamental comprender cómo integrar distintas
+tecnologías para construir soluciones completas, escalables y mantenibles. Esta
+guía tiene como propósito enseñar paso a paso la construcción de una aplicación
+web utilizando Java con Spring Boot, el motor de vistas Thymeleaf y una base de
+datos Oracle Autonomous Database en la nube, conectada mediante el uso de
+wallet de seguridad.
+Spring Boot es un framework del ecosistema de Spring que permite desarrollar
+aplicaciones Java de manera rápida y estructurada. Su principal ventaja es que
+simplifica la configuración inicial del proyecto, evitando la necesidad de
+configuraciones manuales extensas, lo que permite al desarrollador enfocarse
+directamente en la lógica del negocio. Spring Boot sigue una filosofía basada en
+“convención sobre configuración”, lo que significa que el framework asume
+configuraciones por defecto inteligentes que pueden ser modificadas solo cuando
+es necesario.
+Desde el punto de vista arquitectónico, Spring Boot promueve el uso del patrón de
+diseño en capas. Esto implica que la aplicación se divide en componentes bien
+definidos: la capa de presentación (controladores), la capa de lógica de negocio
+(servicios), la capa de acceso a datos (repositorios) y la capa de persistencia
+(entidades). Esta separación permite que el sistema sea más ordenado, escalable
+y fácil de mantener, ya que cada parte cumple una función específica.
+Por otro lado, Thymeleaf es un motor de plantillas que permite generar vistas
+dinámicas en aplicaciones web. A diferencia de otros enfoques donde el frontend
+está completamente separado, Thymeleaf se integra directamente con Spring Boot
+y permite construir interfaces web utilizando HTML tradicional, pero con
+capacidades dinámicas. Esto significa que se pueden mostrar datos provenientes
+de la base de datos, iterar listas, manejar formularios y generar contenido dinámico
+directamente en el servidor.
+El funcionamiento conjunto entre Spring Boot y Thymeleaf sigue un flujo claro:
+cuando el usuario accede a una URL desde el navegador, el controlador en Spring
+Boot recibe la solicitud, procesa la lógica necesaria (generalmente a través de un
+servicio), obtiene los datos desde la base de datos mediante un repositorio, y
+finalmente envía esos datos a una vista Thymeleaf. Thymeleaf renderiza la
+información en HTML y la envía de vuelta al navegador del usuario. Este modelo se
+conoce como arquitectura MVC (Modelo-Vista-Controlador).
+En cuanto a la base de datos, se utiliza Oracle Autonomous Database, que es una
+solución en la nube altamente segura y automatizada. Este tipo de base de datos
+gestiona de forma automática aspectos como el rendimiento, la seguridad, los
+respaldos y la disponibilidad. La conexión a esta base de datos se realiza mediante
+un wallet, que es un conjunto de archivos de configuración y certificados que
+permiten establecer una conexión segura mediante protocolo TCPS, evitando la
+exposición de credenciales sensibles.
+
+El uso de Spring Data JPA en el proyecto permite abstraer la interacción directa con
+la base de datos. En lugar de escribir consultas SQL manuales para cada operación,
+el desarrollador puede utilizar repositorios que ya incluyen operaciones CRUD
+(crear, leer, actualizar y eliminar), lo que reduce la complejidad del código y mejora
+la productividad. Además, JPA se encarga de mapear automáticamente las tablas
+de la base de datos a clases Java, lo que facilita el manejo de los datos dentro de
+la aplicación.
+Esta guía, por tanto, no solo busca enseñar a crear un sistema funcional, sino
+también a comprender cómo se integran estas tecnologías en un entorno real. A lo
+largo del proceso, se construirá un sistema completo con múltiples tablas
+relacionadas, operaciones CRUD y una interfaz web funcional, permitiendo al
+estudiante o desarrollador adquirir una visión clara del desarrollo de aplicaciones
+web modernas con Java.
+Finalmente, es importante destacar que el enfoque utilizado en esta guía es
+progresivo. Se inicia con la configuración del entorno, luego se establece la
+conexión con la base de datos, posteriormente se modelan las entidades y se
+implementa la lógica del sistema, y por último se construyen las vistas web. Este
+orden permite comprender cada componente antes de integrarlo, facilitando el
+aprendizaje y reduciendo errores comunes en el desarrollo.
+
+Sistema de capas en Spring Boot
+Spring Boot trabaja bajo una arquitectura por capas, lo cual significa que la
+aplicación no es un solo bloque de código, sino que está organizada en niveles
+donde cada uno cumple una función específica. Esto no es solo “orden”, es una
+forma de evitar dependencias innecesarias y facilitar mantenimiento, pruebas y
+escalabilidad.
+En su proyecto, las capas funcionan así:
+Primero está la capa de presentación (Controller).
+Esta es la que “habla” con el usuario. Cuando alguien entra desde el navegador a
+una URL como:
+http://localhost:8080/cintas
+Spring Boot envía esa petición al controlador correspondiente. El controlador
+interpreta la solicitud, decide qué hacer y qué vista devolver.
+Luego está la capa de servicio (Service).
+Aquí es donde vive la lógica del sistema. Por ejemplo, validaciones, reglas de
+negocio, combinaciones de datos, etc. El controlador no debería tener lógica
+compleja; solo delega al servicio.
+
+Después está la capa de acceso a datos (Repository).
+Esta capa se encarga de interactuar con la base de datos. Gracias a Spring Data
+JPA, usted no necesita escribir SQL para operaciones básicas, porque el repositorio
+ya tiene métodos como:
+findAll()
+findById()
+save()
+deleteById()
+Finalmente está la capa de persistencia (Entity).
+Son las clases que representan las tablas de la base de datos. Por ejemplo, su tabla
+CINTAS se convierte en una clase Cinta. Spring usa estas clases para mapear
+automáticamente datos entre la base de datos y el código Java.
+El flujo completo funciona así:
+El usuario hace una petición → el Controller la recibe → el Service procesa la lógica
+→ el Repository consulta la base → se devuelven los datos → el Controller los envía
+a la vista → Thymeleaf genera el HTML → el navegador lo muestra.
+Este flujo es el corazón del modelo MVC (Modelo – Vista – Controlador).
+
+Cómo funciona Spring Boot internamente
+Spring Boot usa lo que se llama Inyección de Dependencias. Esto significa que
+usted no crea manualmente los objetos, sino que Spring los crea y los conecta
+automáticamente.
+Por ejemplo, cuando usted escribe:
+@Service
+public class CintaService { ... }
+y luego en el controlador:
+private final CintaService service;
+Spring automáticamente “inyecta” ese servicio. Esto evita que usted tenga que
+hacer new CintaService() y permite que el sistema sea más flexible.
+Además, Spring Boot detecta automáticamente las clases anotadas con:
+@Controller
+@Service
+
+@Repository
+@Entity
+y las registra como componentes del sistema.
+
+Sistema de etiquetas en Thymeleaf
+Thymeleaf funciona sobre HTML, pero agrega atributos especiales llamados
+“atributos Thymeleaf”. No cambia el HTML, lo extiende.
+Por ejemplo, este HTML es normal:
+<td>Texto</td>
+Pero con Thymeleaf:
+<td th:text="${cinta.estanteria}"></td>
+Aquí pasa algo importante:
+${cinta.estanteria} es una expresión que viene desde el backend.
+El controlador envía un objeto al modelo:
+model.addAttribute("cintas", lista);
+Thymeleaf toma esa información y la inserta en el HTML antes de enviarlo al
+navegador.
+Algunos atributos importantes:
+th:text → reemplaza el contenido de la etiqueta
+th:each → recorre listas (como un for)
+th:href → genera enlaces dinámicos
+th:action → define a dónde se envía un formulario
+th:object → vincula un formulario con un objeto Java
+th:field → enlaza campos del formulario con propiedades del objeto
+Ejemplo clave:
+<tr th:each="c : ${cintas}">
+<td th:text="${c.codigoCinta}"></td>
+</tr>
+Esto es equivalente a un ciclo for, pero en HTML.
+
+Cómo funciona la navegación en Thymeleaf
+La navegación en Thymeleaf no es “cliente” como en React, es completamente del
+lado del servidor.
+Cuando usted hace esto:
+<a th:href="@{/cintas}">Ir a cintas</a>
+Thymeleaf genera:
+<a href="/cintas">Ir a cintas</a>
+Cuando el usuario hace clic:
+El navegador hace una nueva petición HTTP → Spring Boot la recibe → el
+Controller responde → Thymeleaf genera otra página → el navegador la
+reemplaza completamente.
+Esto se llama navegación tradicional basada en servidor.
+No hay JavaScript manejando rutas como en SPA (Single Page Applications), sino
+que cada acción recarga la página completa.
+
+Cómo funcionan los formularios con Thymeleaf
+Aquí es donde más valor tiene.
+Ejemplo:
+<form th:action="@{/cintas/guardar}" th:object="${cinta}" method="post">
+<input type="text" th:field="*{estanteria}" />
+<button type="submit">Guardar</button>
+</form>
+Esto hace varias cosas automáticamente:
+th:object vincula el formulario con un objeto Java
+th:field conecta cada input con un atributo del objeto
+Cuando se envía el formulario, Spring convierte automáticamente los datos en un
+objeto Java
+Y en el controlador:
+
+@PostMapping("/guardar")
+public String guardar(@ModelAttribute Cinta cinta) {
+service.guardar(cinta);
+return "redirect:/cintas";
+}
+Spring recibe el formulario y lo convierte en un objeto Cinta sin que usted tenga
+que parsear nada manualmente.
+
+Spring Boot organiza el sistema en capas separadas para mantener orden y
+escalabilidad.
+Thymeleaf permite generar HTML dinámico desde el servidor usando atributos
+especiales.
+El navegador nunca ve Thymeleaf, solo recibe HTML ya procesado.
+Cada acción del usuario genera una petición nueva al servidor.
+Los datos fluyen desde la base de datos → backend → Thymeleaf → HTML →
+navegador.
+
+Ejemplo basado en base de datos VideoClub
+
+Primeramente, es necesario crear la base de datos en Oracle Autonomous
+Database dentro de Oracle Cloud, ya que será el entorno donde se almacenará toda
+la información del sistema.
+Para ello, debe ingresar a Oracle Cloud (https://cloud.oracle.com) con su cuenta
+institucional o personal. Una vez dentro, diríjase al menú principal y seleccione la
+opción de “Oracle Database” y posteriormente “Autonomous Database”.
+En esta sección, deberá crear una nueva base de datos. Para hacerlo, presione el
+botón “Create Autonomous Database” y complete la información solicitada. Como
+pasos generales:
+Debe asignar un nombre a la base de datos, por ejemplo “videoclub”.
+Seleccione el tipo de carga de trabajo “Transaction Processing” (ATP), ya que es el
+más adecuado para aplicaciones web.
+Configure el usuario administrador (ADMIN) y establezca una contraseña segura.
+Puede dejar los valores de CPU y almacenamiento en la configuración básica
+(Always Free o según su entorno).
+Finalmente, presione “Create Autonomous Database” y espere a que el servicio esté
+disponible.
+Una vez creada la base de datos, el siguiente paso fundamental es descargar el
+wallet, el cual permite establecer una conexión segura entre la aplicación y Oracle
+Cloud.
+Para descargar el wallet, ingrese nuevamente a la sección de Autonomous
+Database, seleccione la base de datos que acaba de crear y ubique la opción “DB
+Connection”. Dentro de esta opción encontrará el botón “Download Wallet”.
+Al presionar “Download Wallet”, el sistema le solicitará definir una contraseña para
+proteger el archivo comprimido. Esta contraseña es obligatoria y se utilizará
+posteriormente para acceder a los archivos del wallet. Una vez definida, descargue
+el archivo ZIP.
+Después de la descarga, debe descomprimir el archivo. Se recomienda colocarlo
+en una ruta sencilla y sin espacios para evitar problemas de configuración. En esta
+guía se utilizará la siguiente ruta:
+C:/wallet/videoclub
+
+Dentro de esta carpeta encontrará varios archivos importantes como tnsnames.ora,
+sqlnet.ora, cwallet.sso, entre otros. Estos archivos contienen la configuración
+necesaria para que la aplicación pueda conectarse de forma segura a la base de
+datos.
+Es importante asegurarse de que esta ruta coincida exactamente con la configurada
+en el archivo application.properties del proyecto Spring Boot, específicamente en el
+parámetro TNS_ADMIN.
+Con estos pasos completados, la base de datos estará lista y el entorno preparado
+para establecer la conexión desde la aplicación web desarrollada con Spring Boot.
+
+Paso 1. Crear el proyecto en VS Code
+Abra VS Code y presione Ctrl + Shift + P.
+Escriba:
+Spring Initializr: Create a Maven Project
+Seleccione estas opciones:
+Language: Java
+Spring Boot: la última versión disponible de la rama 3.x
+Group: com.videoclub
+Artifact: videoclubweb
+Name: videoclubweb
+Packaging: Jar
+Java: 17 o 21
+En dependencias, seleccione estas:
+Spring Web
+Spring Data JPA
+Thymeleaf
+Oracle Driver
+Lombok
+Validation
+Spring Boot DevTools
+Guarde el proyecto, por ejemplo, en:
+C:\Users\DOCENTE - 106\Documents\videoclubweb
+
+Paso 2. Abrir el proyecto y revisar la estructura
+Al abrirlo, debe quedarle algo similar a esto:
+videoclubweb
+┣ .mvn
+┣ src
+┃ ┣ main
+┃ ┃ ┣ java
+┃ ┃ ┃ ┗ com
+┃ ┃ ┃ ┗ videoclub
+┃ ┃ ┃ ┗ videoclubweb
+┃ ┃ ┗ resources
+┃ ┃ ┣ static
+┃ ┃ ┣ templates
+┃ ┃ ┗ application.properties
+┣ mvnw
+┣ mvnw.cmd
+┗ pom.xml
+Paso 3. Ajustar el pom.xml
+Como va a usar wallet, no basta solo con ojdbc. Oracle documenta que para
+conexiones JDBC Thin con wallet se usan además componentes de seguridad
+como oraclepki, osdt_core y osdt_cert. Entonces revise su pom.xml y déjelo así:
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+https://maven.apache.org/xsd/maven-4.0.0.xsd">
+<modelVersion>4.0.0</modelVersion>
+<parent>
+<groupId>org.springframework.boot</groupId>
+<artifactId>spring-boot-starter-parent</artifactId>
+<version>3.3.5</version>
+<relativePath/>
+</parent>
+<groupId>com.videoclub</groupId>
+<artifactId>videoclubweb</artifactId>
+<version>0.0.1-SNAPSHOT</version>
+<name>videoclubweb</name>
+<description>Proyecto web Videoclub con Spring Boot, Thymeleaf y
+Oracle Autonomous Database</description>
+<properties>
+<java.version>21</java.version>
+</properties>
+<dependencies>
+
+<dependency>
+<groupId>org.springframework.boot</groupId>
+<artifactId>spring-boot-starter-web</artifactId>
+</dependency>
+<dependency>
+<groupId>org.springframework.boot</groupId>
+<artifactId>spring-boot-starter-thymeleaf</artifactId>
+</dependency>
+<dependency>
+<groupId>org.springframework.boot</groupId>
+<artifactId>spring-boot-starter-data-jpa</artifactId>
+</dependency>
+<dependency>
+<groupId>org.springframework.boot</groupId>
+<artifactId>spring-boot-starter-validation</artifactId>
+</dependency>
+<dependency>
+<groupId>com.oracle.database.jdbc</groupId>
+<artifactId>ojdbc11</artifactId>
+<scope>runtime</scope>
+</dependency>
+<dependency>
+<groupId>com.oracle.database.security</groupId>
+<artifactId>oraclepki</artifactId>
+<scope>runtime</scope>
+</dependency>
+<dependency>
+<groupId>com.oracle.database.security</groupId>
+<artifactId>osdt_core</artifactId>
+<scope>runtime</scope>
+</dependency>
+<dependency>
+<groupId>com.oracle.database.security</groupId>
+<artifactId>osdt_cert</artifactId>
+<scope>runtime</scope>
+</dependency>
+<dependency>
+<groupId>org.projectlombok</groupId>
+<artifactId>lombok</artifactId>
+<optional>true</optional>
+</dependency>
+<dependency>
+<groupId>org.springframework.boot</groupId>
+<artifactId>spring-boot-devtools</artifactId>
+<scope>runtime</scope>
+<optional>true</optional>
+</dependency>
+
+<dependency>
+<groupId>com.oracle.database.ha</groupId>
+<artifactId>ons</artifactId>
+<scope>runtime</scope>
+</dependency>
+</dependencies>
+<build>
+<plugins>
+<plugin>
+<groupId>org.springframework.boot</groupId>
+<artifactId>spring-boot-maven-plugin</artifactId>
+</plugin>
+</plugins>
+</build>
+</project>
+La razón de usar el parent oficial de Spring Boot es evitar mezclas raras de
+versiones del plugin, que fue precisamente uno de los problemas que antes le
+estaba saliendo. Spring recomienda ese esquema base para Maven.
+Paso 4. Configurar la conexión con Oracle Autonomous
+Aquí está una de las partes más importantes. Usted ya tiene el wallet en:
+C:/wallet/videoclub
+No va a usar el CONNECT_STRING largo tipo (description=...) dentro del código
+Java. En Spring Boot con wallet, lo correcto es usar el alias del servicio que viene
+dentro de tnsnames.ora del wallet. Oracle documenta ese formato de URL con
+TNS_ADMIN.
+Abra el archivo:
+C:/wallet/videoclub/tnsnames.ora
+Ahí verá algo parecido a esto:
+videoclub_high =
+(description=...)
+videoclub_medium =
+(description=...)
+videoclub_low =
+(description=...)
+O tal vez el alias tenga otro nombre, pero debe usar exactamente el alias del
+tnsnames.ora.
+Ahora edite src/main/resources/application.properties así:
+
+spring.application.name=videoclubweb
+server.port=8080
+spring.datasource.url=jdbc:oracle:thin:@videoclub_high?TNS_ADMIN=C:/walle
+t/videoclub
+spring.datasource.username=ADMIN
+spring.datasource.password=SU_CLAVE_REAL
+spring.datasource.driver-class-name=oracle.jdbc.OracleDriver
+spring.jpa.hibernate.ddl-auto=none
+spring.jpa.show-sql=true
+spring.jpa.properties.hibernate.format_sql=true
+spring.jpa.database-platform=org.hibernate.dialect.OracleDialect
+spring.thymeleaf.cache=false
+logging.level.org.hibernate.SQL=DEBUG
+logging.level.org.hibernate.orm.jdbc.bind=TRACE
+Si en su tnsnames.ora el alias no se llama videoclub_high, cambie ese valor por el
+alias real.
+También revise el archivo sqlnet.ora del wallet. Debe seguir apuntando al wallet,
+pero si el zip ya vino bien configurado, normalmente no hay que tocarlo.
+Paso 5. Probar primero solo la conexión
+Antes de crear todas las entidades, haga una prueba mínima para verificar que
+Spring arranca y logra conectarse.
+La clase principal debe verse así:
+package com.videoclub.videoclubweb;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+@SpringBootApplication
+public class VideoclubwebApplication {
+public static void main(String[] args) {
+SpringApplication.run(VideoclubwebApplication.class, args);
+}
+}
+Abra terminal en VS Code y ejecute:
+./mvnw spring-boot:run
+Si no da error, la conexión básica está lista.
+Paso 6. Crear la estructura de paquetes
+
+Dentro de src/main/java/com/videoclub/videoclubweb cree estos paquetes:
+controller
+entity
+repository
+service
+Paso 7. Modelar las tablas según su diagrama
+Como su diagrama usa llaves primarias manuales int y no muestra secuencias ni
+identidad, para esta primera versión conviene que el usuario escriba el código
+manualmente en los formularios. Eso simplifica mucho el arranque del CRUD. El
+esquema base es este: CINTAS, PELICULAS, ACTORES y dos tablas puente con
+llaves compuestas CINTA_PELICULA y PELICULA_ACTOR.
+Cree Cinta.java:
+package com.videoclub.videoclubweb.entity;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import jakarta.persistence.Column;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+@Entity
+@Table(name = "CINTAS")
+@Data
+@NoArgsConstructor
+public class Cinta {
+@Id
+@Column(name = "CODIGO_CINTA")
+private Integer codigoCinta;
+@Column(name = "ESTANTERIA")
+private String estanteria;
+@Column(name = "ESTANTE")
+private String estante;
+@Column(name = "FILA")
+private String fila;
+}
+Cree Pelicula.java:
+package com.videoclub.videoclubweb.entity;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+
+import jakarta.persistence.Column;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+@Entity
+@Table(name = "PELICULAS")
+@Data
+@NoArgsConstructor
+public class Pelicula {
+@Id
+@Column(name = "CODIGO_PELICULA")
+private Integer codigoPelicula;
+@Column(name = "TITULO")
+private String titulo;
+@Column(name = "DIRECTOR_PRINCIPAL")
+private String directorPrincipal;
+@Column(name = "TEMA")
+private String tema;
+}
+Cree Actor.java:
+package com.videoclub.videoclubweb.entity;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import jakarta.persistence.Column;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+@Entity
+@Table(name = "ACTORES")
+@Data
+@NoArgsConstructor
+public class Actor {
+@Id
+@Column(name = "CODIGO_ACTOR")
+private Integer codigoActor;
+@Column(name = "NOMBRE")
+private String nombre;
+@Column(name = "APELLIDO")
+private String apellido;
+@Column(name = "OTROS_DATOS")
+private String otrosDatos;
+}
+Paso 8. Crear las llaves compuestas para las tablas intermedias
+
+Cree CintaPeliculaId.java:
+package com.videoclub.videoclubweb.entity;
+import jakarta.persistence.Column;
+import jakarta.persistence.Embeddable;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import java.io.Serializable;
+@Embeddable
+@Data
+@NoArgsConstructor
+public class CintaPeliculaId implements Serializable {
+@Column(name = "CODIGO_CINTA")
+private Integer codigoCinta;
+@Column(name = "CODIGO_PELICULA")
+private Integer codigoPelicula;
+}
+Cree PeliculaActorId.java:
+package com.videoclub.videoclubweb.entity;
+import jakarta.persistence.Column;
+import jakarta.persistence.Embeddable;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import java.io.Serializable;
+@Embeddable
+@Data
+@NoArgsConstructor
+public class PeliculaActorId implements Serializable {
+@Column(name = "CODIGO_PELICULA")
+private Integer codigoPelicula;
+@Column(name = "CODIGO_ACTOR")
+private Integer codigoActor;
+}
+Paso 9. Crear las entidades de las tablas puente
+Cree CintaPelicula.java:
+package com.videoclub.videoclubweb.entity;
+import jakarta.persistence.*;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Entity
+@Table(name = "CINTA_PELICULA")
+@Data
+@NoArgsConstructor
+public class CintaPelicula {
+@EmbeddedId
+private CintaPeliculaId id;
+@ManyToOne
+@MapsId("codigoCinta")
+@JoinColumn(name = "CODIGO_CINTA")
+private Cinta cinta;
+@ManyToOne
+@MapsId("codigoPelicula")
+@JoinColumn(name = "CODIGO_PELICULA")
+private Pelicula pelicula;
+}
+Cree PeliculaActor.java:
+package com.videoclub.videoclubweb.entity;
+import jakarta.persistence.*;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+@Entity
+@Table(name = "PELICULA_ACTOR")
+@Data
+@NoArgsConstructor
+public class PeliculaActor {
+@EmbeddedId
+private PeliculaActorId id;
+@ManyToOne
+@MapsId("codigoPelicula")
+@JoinColumn(name = "CODIGO_PELICULA")
+private Pelicula pelicula;
+@ManyToOne
+@MapsId("codigoActor")
+@JoinColumn(name = "CODIGO_ACTOR")
+private Actor actor;
+}
+Paso 10. Crear los repositorios
+Cree estos cinco archivos en repository.
+CintaRepository.java
+
+package com.videoclub.videoclubweb.repository;
+import com.videoclub.videoclubweb.entity.Cinta;
+import org.springframework.data.jpa.repository.JpaRepository;
+public interface CintaRepository extends JpaRepository<Cinta, Integer> {
+}
+PeliculaRepository.java
+package com.videoclub.videoclubweb.repository;
+import com.videoclub.videoclubweb.entity.Pelicula;
+import org.springframework.data.jpa.repository.JpaRepository;
+public interface PeliculaRepository extends JpaRepository<Pelicula,
+Integer> {
+}
+ActorRepository.java
+package com.videoclub.videoclubweb.repository;
+import com.videoclub.videoclubweb.entity.Actor;
+import org.springframework.data.jpa.repository.JpaRepository;
+public interface ActorRepository extends JpaRepository<Actor, Integer> {
+}
+CintaPeliculaRepository.java
+package com.videoclub.videoclubweb.repository;
+import com.videoclub.videoclubweb.entity.CintaPelicula;
+import com.videoclub.videoclubweb.entity.CintaPeliculaId;
+import org.springframework.data.jpa.repository.JpaRepository;
+public interface CintaPeliculaRepository extends
+JpaRepository<CintaPelicula, CintaPeliculaId> {
+}
+PeliculaActorRepository.java
+package com.videoclub.videoclubweb.repository;
+import com.videoclub.videoclubweb.entity.PeliculaActor;
+import com.videoclub.videoclubweb.entity.PeliculaActorId;
+import org.springframework.data.jpa.repository.JpaRepository;
+public interface PeliculaActorRepository extends
+JpaRepository<PeliculaActor, PeliculaActorId> {
+}
+Paso 11. Crear servicios simples
+
+Para arrancar rápido, los servicios pueden ser muy sencillos. Le muestro uno
+completo y luego repite el patrón.
+CintaService.java
+package com.videoclub.videoclubweb.service;
+import com.videoclub.videoclubweb.entity.Cinta;
+import com.videoclub.videoclubweb.repository.CintaRepository;
+import org.springframework.stereotype.Service;
+import java.util.List;
+@Service
+public class CintaService {
+private final CintaRepository repository;
+public CintaService(CintaRepository repository) {
+this.repository = repository;
+}
+public List<Cinta> listar() {
+return repository.findAll();
+}
+public Cinta obtener(Integer id) {
+return repository.findById(id).orElse(null);
+}
+public Cinta guardar(Cinta cinta) {
+return repository.save(cinta);
+}
+public void eliminar(Integer id) {
+repository.deleteById(id);
+}
+}
+Haga lo mismo para PeliculaService y ActorService.
+Para CintaPeliculaService y PeliculaActorService, igual, solo cambia el tipo de
+llave.
+Paso 12. Crear controladores con Thymeleaf para las tablas principales
+Vamos a usar el patrón clásico: listar, nuevo, guardar, editar y eliminar.
+CintaController.java
+package com.videoclub.videoclubweb.controller;
+import com.videoclub.videoclubweb.entity.Cinta;
+
+import com.videoclub.videoclubweb.service.CintaService;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
+@Controller
+@RequestMapping("/cintas")
+public class CintaController {
+private final CintaService service;
+public CintaController(CintaService service) {
+this.service = service;
+}
+@GetMapping
+public String listar(Model model) {
+model.addAttribute("cintas", service.listar());
+return "cintas/lista";
+}
+@GetMapping("/nuevo")
+public String nuevo(Model model) {
+model.addAttribute("cinta", new Cinta());
+return "cintas/formulario";
+}
+@PostMapping("/guardar")
+public String guardar(@ModelAttribute Cinta cinta) {
+service.guardar(cinta);
+return "redirect:/cintas";
+}
+@GetMapping("/editar/{id}")
+public String editar(@PathVariable Integer id, Model model) {
+model.addAttribute("cinta", service.obtener(id));
+return "cintas/formulario";
+}
+@GetMapping("/eliminar/{id}")
+public String eliminar(@PathVariable Integer id) {
+service.eliminar(id);
+return "redirect:/cintas";
+}
+}
+PeliculaController.java
+package com.videoclub.videoclubweb.controller;
+import com.videoclub.videoclubweb.entity.Pelicula;
+import com.videoclub.videoclubweb.service.PeliculaService;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
+
+@Controller
+@RequestMapping("/peliculas")
+public class PeliculaController {
+private final PeliculaService service;
+public PeliculaController(PeliculaService service) {
+this.service = service;
+}
+@GetMapping
+public String listar(Model model) {
+model.addAttribute("peliculas", service.listar());
+return "peliculas/lista";
+}
+@GetMapping("/nuevo")
+public String nuevo(Model model) {
+model.addAttribute("pelicula", new Pelicula());
+return "peliculas/formulario";
+}
+@PostMapping("/guardar")
+public String guardar(@ModelAttribute Pelicula pelicula) {
+service.guardar(pelicula);
+return "redirect:/peliculas";
+}
+@GetMapping("/editar/{id}")
+public String editar(@PathVariable Integer id, Model model) {
+model.addAttribute("pelicula", service.obtener(id));
+return "peliculas/formulario";
+}
+@GetMapping("/eliminar/{id}")
+public String eliminar(@PathVariable Integer id) {
+service.eliminar(id);
+return "redirect:/peliculas";
+}
+}
+ActorController.java
+package com.videoclub.videoclubweb.controller;
+import com.videoclub.videoclubweb.entity.Actor;
+import com.videoclub.videoclubweb.service.ActorService;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
+@Controller
+@RequestMapping("/actores")
+public class ActorController {
+private final ActorService service;
+
+public ActorController(ActorService service) {
+this.service = service;
+}
+@GetMapping
+public String listar(Model model) {
+model.addAttribute("actores", service.listar());
+return "actores/lista";
+}
+@GetMapping("/nuevo")
+public String nuevo(Model model) {
+model.addAttribute("actor", new Actor());
+return "actores/formulario";
+}
+@PostMapping("/guardar")
+public String guardar(@ModelAttribute Actor actor) {
+service.guardar(actor);
+return "redirect:/actores";
+}
+@GetMapping("/editar/{id}")
+public String editar(@PathVariable Integer id, Model model) {
+model.addAttribute("actor", service.obtener(id));
+return "actores/formulario";
+}
+@GetMapping("/eliminar/{id}")
+public String eliminar(@PathVariable Integer id) {
+service.eliminar(id);
+return "redirect:/actores";
+}
+}
+Paso 13. Controladores para las tablas intermedias
+Aquí lo más práctico es usar formularios con listas desplegables para elegir IDs ya
+existentes.
+CintaPeliculaController.java
+package com.videoclub.videoclubweb.controller;
+import com.videoclub.videoclubweb.entity.Cinta;
+import com.videoclub.videoclubweb.entity.CintaPelicula;
+import com.videoclub.videoclubweb.entity.CintaPeliculaId;
+import com.videoclub.videoclubweb.entity.Pelicula;
+import com.videoclub.videoclubweb.repository.CintaPeliculaRepository;
+import com.videoclub.videoclubweb.repository.CintaRepository;
+import com.videoclub.videoclubweb.repository.PeliculaRepository;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
+
+@Controller
+@RequestMapping("/cinta-pelicula")
+public class CintaPeliculaController {
+private final CintaPeliculaRepository relationRepository;
+private final CintaRepository cintaRepository;
+private final PeliculaRepository peliculaRepository;
+public CintaPeliculaController(CintaPeliculaRepository
+relationRepository,
+CintaRepository cintaRepository,
+PeliculaRepository peliculaRepository)
+{
+this.relationRepository = relationRepository;
+this.cintaRepository = cintaRepository;
+this.peliculaRepository = peliculaRepository;
+}
+@GetMapping
+public String listar(Model model) {
+model.addAttribute("relaciones", relationRepository.findAll());
+return "cinta_pelicula/lista";
+}
+@GetMapping("/nuevo")
+public String nuevo(Model model) {
+model.addAttribute("cintas", cintaRepository.findAll());
+model.addAttribute("peliculas", peliculaRepository.findAll());
+return "cinta_pelicula/formulario";
+}
+@PostMapping("/guardar")
+public String guardar(@RequestParam Integer codigoCinta,
+@RequestParam Integer codigoPelicula) {
+Cinta cinta = cintaRepository.findById(codigoCinta).orElse(null);
+Pelicula pelicula =
+peliculaRepository.findById(codigoPelicula).orElse(null);
+CintaPeliculaId id = new CintaPeliculaId();
+id.setCodigoCinta(codigoCinta);
+id.setCodigoPelicula(codigoPelicula);
+CintaPelicula relacion = new CintaPelicula();
+relacion.setId(id);
+relacion.setCinta(cinta);
+relacion.setPelicula(pelicula);
+relationRepository.save(relacion);
+return "redirect:/cinta-pelicula";
+}
+@GetMapping("/eliminar")
+public String eliminar(@RequestParam Integer codigoCinta,
+@RequestParam Integer codigoPelicula) {
+CintaPeliculaId id = new CintaPeliculaId();
+id.setCodigoCinta(codigoCinta);
+
+id.setCodigoPelicula(codigoPelicula);
+relationRepository.deleteById(id);
+return "redirect:/cinta-pelicula";
+}
+}
+PeliculaActorController.java sigue el mismo patrón cambiando las entidades.
+Paso 14. Crear las vistas Thymeleaf
+Dentro de src/main/resources/templates cree estas carpetas:
+cintas
+peliculas
+actores
+cinta_pelicula
+pelicula_actor
+También cree una portada index.html.
+templates/index.html
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Videoclub</title>
+</head>
+<body>
+<h1>Sistema Videoclub</h1>
+<ul>
+<li><a th:href="@{/cintas}">CRUD Cintas</a></li>
+<li><a th:href="@{/peliculas}">CRUD Películas</a></li>
+<li><a th:href="@{/actores}">CRUD Actores</a></li>
+<li><a th:href="@{/cinta-pelicula}">CRUD Cinta-Película</a></li>
+<li><a th:href="@{/pelicula-actor}">CRUD Película-Actor</a></li>
+</ul>
+</body>
+</html>
+templates/cintas/lista.html
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Cintas</title>
+</head>
+<body>
+<h1>Lista de Cintas</h1>
+<a th:href="@{/}">Inicio</a>
+<a th:href="@{/cintas/nuevo}">Nueva Cinta</a>
+<table border="1">
+
+<thead>
+<tr>
+<th>Código</th>
+<th>Estantería</th>
+<th>Estante</th>
+<th>Fila</th>
+<th>Acciones</th>
+</tr>
+</thead>
+<tbody>
+<tr th:each="c : ${cintas}">
+<td th:text="${c.codigoCinta}"></td>
+<td th:text="${c.estanteria}"></td>
+<td th:text="${c.estante}"></td>
+<td th:text="${c.fila}"></td>
+<td>
+<a th:href="@{'/cintas/editar/' +
+${c.codigoCinta}}">Editar</a>
+<a th:href="@{'/cintas/eliminar/' +
+${c.codigoCinta}}">Eliminar</a>
+</td>
+</tr>
+</tbody>
+</table>
+</body>
+</html>
+templates/cintas/formulario.html
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Formulario Cinta</title>
+</head>
+<body>
+<h1>Formulario de Cinta</h1>
+<a th:href="@{/cintas}">Volver</a>
+<form th:action="@{/cintas/guardar}" th:object="${cinta}"
+method="post">
+<div>
+<label>Código:</label>
+<input type="number" th:field="*{codigoCinta}" />
+</div>
+<div>
+<label>Estantería:</label>
+<input type="text" th:field="*{estanteria}" />
+</div>
+<div>
+<label>Estante:</label>
+<input type="text" th:field="*{estante}" />
+</div>
+<div>
+<label>Fila:</label>
+<input type="text" th:field="*{fila}" />
+
+</div>
+<button type="submit">Guardar</button>
+</form>
+</body>
+</html>
+Haga exactamente el mismo patrón para peliculas y actores, cambiando campos.
+Para cinta_pelicula/formulario.html, use select:
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Relacionar Cinta y Película</title>
+</head>
+<body>
+<h1>Nueva relación Cinta - Película</h1>
+<a th:href="@{/cinta-pelicula}">Volver</a>
+<form th:action="@{/cinta-pelicula/guardar}" method="post">
+<div>
+<label>Cinta:</label>
+<select name="codigoCinta">
+<option th:each="c : ${cintas}"
+th:value="${c.codigoCinta}" th:text="${c.codigoCinta + ' - ' +
+c.estanteria}"></option>
+</select>
+</div>
+<div>
+<label>Película:</label>
+<select name="codigoPelicula">
+<option th:each="p : ${peliculas}"
+th:value="${p.codigoPelicula}" th:text="${p.codigoPelicula + ' - ' +
+p.titulo}"></option>
+</select>
+</div>
+<button type="submit">Guardar</button>
+</form>
+</body>
+</html>
+La lista de esa relación puede mostrar ambos códigos.
+Paso 15. Crear un controlador de inicio
+HomeController.java
+package com.videoclub.videoclubweb.controller;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+
+@Controller
+public class HomeController {
+@GetMapping("/")
+public String inicio() {
+return "index";
+}
+}
+Paso 16. Ejecutar el proyecto
+Abra terminal en VS Code y ejecute:
+./mvnw spring-boot:run
+Cuando arranque, abra:
+http://localhost:8080
+Y desde ahí entra a cada CRUD.

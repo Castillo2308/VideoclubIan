@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Relacionar Película y Actor</title>
+</head>
+<body>
+    <h1>Nueva relación Película - Actor</h1>
+    <a th:href="@{/pelicula-actor}">Volver</a>
+    <form th:action="@{/pelicula-actor/guardar}" method="post">
+        <div>
+            <label>Película:</label>
+            <select name="codigoPelicula">
+                <option th:each="p : ${peliculas}"
+                        th:value="${p.codigoPelicula}"
+                        th:text="${p.codigoPelicula + ' - ' + p.titulo}"></option>
+            </select>
+        </div>
+        <div>
+            <label>Actor:</label>
+            <select name="codigoActor">
+                <option th:each="a : ${actores}"
+                        th:value="${a.codigoActor}"
+                        th:text="${a.codigoActor + ' - ' + a.nombre + ' ' + a.apellido}"></option>
+            </select>
+        </div>
+        <button type="submit">Guardar</button>
+    </form>
+</body>
+</html>

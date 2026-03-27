@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Películas</title>
+</head>
+<body>
+    <h1>Lista de Películas</h1>
+    <a th:href="@{/}">Inicio</a>
+    <a th:href="@{/peliculas/nuevo}">Nueva Película</a>
+
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Código</th>
+                <th>Título</th>
+                <th>Director Principal</th>
+                <th>Tema</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="p : ${peliculas}">
+                <td th:text="${p.codigoPelicula}"></td>
+                <td th:text="${p.titulo}"></td>
+                <td th:text="${p.directorPrincipal}"></td>
+                <td th:text="${p.tema}"></td>
+                <td>
+                    <a th:href="@{'/peliculas/editar/' + ${p.codigoPelicula}}">Editar</a>
+                    <a th:href="@{'/peliculas/eliminar/' + ${p.codigoPelicula}}">Eliminar</a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</body>
+</html>

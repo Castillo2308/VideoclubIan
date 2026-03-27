@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Formulario Actor</title>
+</head>
+<body>
+    <h1>Formulario de Actor</h1>
+    <a th:href="@{/actores}">Volver</a>
+    <form th:action="@{/actores/guardar}" th:object="${actor}" method="post">
+        <div>
+            <label>Código:</label>
+            <input type="number" th:field="*{codigoActor}" />
+        </div>
+        <div>
+            <label>Nombre:</label>
+            <input type="text" th:field="*{nombre}" />
+        </div>
+        <div>
+            <label>Apellido:</label>
+            <input type="text" th:field="*{apellido}" />
+        </div>
+        <div>
+            <label>Otros Datos:</label>
+            <input type="text" th:field="*{otrosDatos}" />
+        </div>
+        <button type="submit">Guardar</button>
+    </form>
+</body>
+</html>

@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Relaciones Cinta-Película</title>
+</head>
+<body>
+    <h1>Relaciones Cinta - Película</h1>
+    <a th:href="@{/}">Inicio</a>
+    <a th:href="@{/cinta-pelicula/nuevo}">Nueva Relación</a>
+
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Código Cinta</th>
+                <th>Código Película</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="r : ${relaciones}">
+                <td th:text="${r.id.codigoCinta}"></td>
+                <td th:text="${r.id.codigoPelicula}"></td>
+                <td>
+                    <a th:href="@{'/cinta-pelicula/eliminar?codigoCinta=' + ${r.id.codigoCinta} + '&codigoPelicula=' + ${r.id.codigoPelicula}}">Eliminar</a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</body>
+</html>

@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Formulario Cinta</title>
+</head>
+<body>
+    <h1>Formulario de Cinta</h1>
+    <a th:href="@{/cintas}">Volver</a>
+
+    <form th:action="@{/cintas/guardar}" th:object="${cinta}" method="post">
+        <div>
+            <label>Código:</label>
+            <input type="number" th:field="*{codigoCinta}" />
+        </div>
+        <div>
+            <label>Estantería:</label>
+            <input type="text" th:field="*{estanteria}" />
+        </div>
+        <div>
+            <label>Estante:</label>
+            <input type="text" th:field="*{estante}" />
+        </div>
+        <div>
+            <label>Fila:</label>
+            <input type="text" th:field="*{fila}" />
+        </div>
+        <button type="submit">Guardar</button>
+    </form>
+</body>
+</html>

@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Formulario Película</title>
+</head>
+<body>
+    <h1>Formulario de Película</h1>
+    <a th:href="@{/peliculas}">Volver</a>
+    <form th:action="@{/peliculas/guardar}" th:object="${pelicula}" method="post">
+        <div>
+            <label>Código:</label>
+            <input type="number" th:field="*{codigoPelicula}" />
+        </div>
+        <div>
+            <label>Título:</label>
+            <input type="text" th:field="*{titulo}" />
+        </div>
+        <div>
+            <label>Director Principal:</label>
+            <input type="text" th:field="*{directorPrincipal}" />
+        </div>
+        <div>
+            <label>Tema:</label>
+            <input type="text" th:field="*{tema}" />
+        </div>
+        <button type="submit">Guardar</button>
+    </form>
+</body>
+</html>

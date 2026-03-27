@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Actores</title>
+</head>
+<body>
+    <h1>Lista de Actores</h1>
+    <a th:href="@{/}">Inicio</a>
+    <a th:href="@{/actores/nuevo}">Nuevo Actor</a>
+
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Código</th>
+                <th>Nombre</th>
+                <th>Apellido</th>
+                <th>Otros Datos</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="a : ${actores}">
+                <td th:text="${a.codigoActor}"></td>
+                <td th:text="${a.nombre}"></td>
+                <td th:text="${a.apellido}"></td>
+                <td th:text="${a.otrosDatos}"></td>
+                <td>
+                    <a th:href="@{'/actores/editar/' + ${a.codigoActor}}">Editar</a>
+                    <a th:href="@{'/actores/eliminar/' + ${a.codigoActor}}">Eliminar</a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</body>
+</html>
