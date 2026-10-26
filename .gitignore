@@ -31,3 +31,8 @@ build/
 
 ### VS Code ###
 .vscode/
+
+### Secrets ###
+Wallet_videoclub/
+Wallet_*/
+src/main/resources/application.properties
